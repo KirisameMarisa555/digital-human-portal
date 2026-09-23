@@ -1,5 +1,5 @@
 import { apiClient } from './client'
-import type { ApiResult, CourseScene, CourseScenesResult, CourseTaskState, CourseUploadResult, TaskName, TaskStatus } from '../types'
+import type { ApiResult, CourseInfo, CourseScene, CourseScenesResult, CourseTaskState, CourseUploadResult, TaskName, TaskStatus } from '../types'
 
 export const digitalHumanApi = {
   async login(user: string, password: string) {
@@ -64,6 +64,11 @@ export const digitalHumanApi = {
     if (data.result !== 'Success') throw new Error('读取课程场景失败')
     return data.scenes || []
   },
+  async getCourseInfo(user: string, courseId: string) {
+    const { data } = await apiClient.get<CourseInfo>('/Course_Info', { params: { User: user, course_id: courseId } })
+    if (data.result !== 'Success') throw new Error('读取课程信息失败')
+    return data
+  },
   async saveCourseScenes(user: string, courseId: string, scenes: CourseScene[]) {
     const { data } = await apiClient.put<ApiResult<string>>('/Course_Scenes', { User: user, Course_Id: courseId, Scenes: scenes })
     if (data.result !== 'Success') throw new Error('保存讲稿失败')
@@ -78,6 +83,10 @@ export const digitalHumanApi = {
   },
   async downloadCourse(user: string, courseId: string, type: 'mp4' | 'vtt' = 'mp4') {
     const response = await apiClient.get<Blob>('/Course_Download', { params: { User: user, course_id: courseId, type }, responseType: 'blob' })
+    return response.data
+  },
+  async downloadCoursePage(user: string, courseId: string, index: number) {
+    const response = await apiClient.get<Blob>('/Course_Page', { params: { User: user, course_id: courseId, index }, responseType: 'blob' })
     return response.data
   },
 }

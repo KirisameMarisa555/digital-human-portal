@@ -20,6 +20,7 @@ export type CourseTaskState = {
   progress: number
   error?: string | null
 }
+export type CourseInfo = { result: string; course_id: string; name: string; scenes: CourseScene[]; state?: CourseTaskState | null }
 
 export type CourseDraft = {
   user: string
