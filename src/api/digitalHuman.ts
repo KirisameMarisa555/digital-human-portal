@@ -1,5 +1,5 @@
 import { apiClient } from './client'
-import type { ApiResult, CourseScene, CourseScenesResult, CourseUploadResult, TaskName, TaskStatus } from '../types'
+import type { ApiResult, CourseScene, CourseScenesResult, CourseTaskState, CourseUploadResult, TaskName, TaskStatus } from '../types'
 
 export const digitalHumanApi = {
   async login(user: string, password: string) {
@@ -73,7 +73,7 @@ export const digitalHumanApi = {
     if (data.result !== 'Course_Render') throw new Error(data.result || '课程生成任务提交失败')
   },
   async getCourseState(user: string, courseId: string) {
-    const { data } = await apiClient.post<ApiResult<TaskStatus>>('/Course_State', { User: user, Course_Id: courseId, Task: 'Course_Render' })
+    const { data } = await apiClient.post<ApiResult<CourseTaskState>>('/Course_State', { User: user, Course_Id: courseId, Task: 'Course_Render' })
     return data.result
   },
   async downloadCourse(user: string, courseId: string, type: 'mp4' | 'vtt' = 'mp4') {

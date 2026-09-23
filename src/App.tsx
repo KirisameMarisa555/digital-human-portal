@@ -63,9 +63,9 @@ function Workspace() {
       for (let attempt = 0; attempt < 90; attempt += 1) {
         await new Promise((resolve) => window.setTimeout(resolve, 2000))
         const state = await digitalHumanApi.getCourseState(user, courseId)
-        if (state === true) { setStep('result'); setNotice('课程视频已生成，可以下载。'); return }
-        if (typeof state === 'string' && state.toLowerCase() === 'failed') throw new Error('课程生成失败')
-        setNotice(`课程正在生成（已等待 ${Math.round((attempt + 1) * 2)} 秒）...`)
+        if (state.status === 'success') { setStep('result'); setNotice('课程视频已生成，可以下载。'); return }
+        if (state.status === 'failed') throw new Error(state.error || '课程生成失败')
+        setNotice(`课程正在${state.stage}（${state.progress}% · 已等待 ${Math.round((attempt + 1) * 2)} 秒）...`)
       }
       throw new Error('课程生成超时，请稍后在课程中重试')
     } catch (cause) { setError((cause as Error).message); setStep('edit') } finally { setBusy(false) }

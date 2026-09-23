@@ -13,6 +13,13 @@ export type CourseScene = {
 
 export type CourseUploadResult = { result: string; course_id: string }
 export type CourseScenesResult = { result: string; course_id?: string; scenes: CourseScene[] }
+export type CourseTaskState = {
+  task_id?: string
+  status: 'idle' | 'queued' | 'running' | 'success' | 'failed'
+  stage: string
+  progress: number
+  error?: string | null
+}
 
 export type CourseDraft = {
   user: string
